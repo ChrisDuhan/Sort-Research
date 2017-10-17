@@ -5,8 +5,10 @@
 
 using namespace std;
 
-void linearSearch(vector <int>, int, int&);
-void binarySearch(vector <int>, int, int&);
+int linearSearch(vector <int>, int, int&);
+int binarySearch(vector <int>, int, int&);
+void insertionSort(vector <int>, int&);
+void quickSort(vector <int>, int&);
 
 const int DATA_SET_SIZE = 1000;
 const int TESTS_ON_DATA = 1000;
@@ -14,7 +16,8 @@ const int NUM_ITEMS_SEARCHED_FOR = 1;
 
 int main() // args[datasetsize, testsondata, numitemssearchedfor]
 {
-	ofstream out("data.dat");
+    ofstream out("data.dat");
+    int successes = 0;
 
 	out << "DATA_SET_SIZE            " << DATA_SET_SIZE << endl;
 	out << "TESTS_ON_DATA            " << TESTS_ON_DATA << endl;
@@ -28,26 +31,28 @@ int main() // args[datasetsize, testsondata, numitemssearchedfor]
 			data.push_back(rand() % 1000);
 
 		for (int i = 0; i < NUM_ITEMS_SEARCHED_FOR; ++i) // search this many times
-			linearSearch(data, (rand() % 1000), comparisons);
+			successes += linearSearch(data, (rand() % 1000), comparisons);
 
-		avgComps = comparisons / NUM_ITEMS_SEARCHED_FOR;
+        avgComps = comparisons / NUM_ITEMS_SEARCHED_FOR;
+        out << successes <<endl;
+        out << NUM_ITEMS_SEARCHED_FOR - successes << endl;
 		out << avgComps << endl;
 	}
 
 	return 0;
 }
 
-void linearSearch(vector <int> data, int val, int & comparisons)
+int linearSearch(vector <int> data, int val, int & comparisons)
 {
 	for (int i = 0; i <= data.size(); ++i)
 	{
 		if (++comparisons && val == data[i])
-			return;
+			return 1;
 	}
-	return;
+	return 0;
 }
 
-void binarySearch(vector <int> data, int val, int & comparisons)
+int binarySearch(vector <int> data, int val, int & comparisons)
 {
 	int low = 0;
 	int high = data.size() - 1;
@@ -61,6 +66,29 @@ void binarySearch(vector <int> data, int val, int & comparisons)
 		else if (++comparisons && val > data[mid])
 			low = mid + 1;
 		else
-			return;// data[mid];
-	}
+			return 1;// data[mid];
+    }
+    return 0;
+}
+
+void insertionSort(vector <int> data, int & comparisons)
+{
+   int key = 0, j = 0;
+   for (int i = 1; i < data.size(); ++i)
+   {
+       key = data[i];
+       j = i-1;
+
+       while (++comparisons && j >= 0 && data[j] > key)
+       {
+           data[j+1] = data[j];
+           j = j-1;
+       }
+       data[j+1] = key;
+   }
+}
+
+void quickSort(vector <int>, int & comparisons)
+{
+
 }
